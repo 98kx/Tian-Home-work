@@ -11,7 +11,8 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 1080, 720
 SCREEN_TITLE = "Pong-Style Ball Game"
 FPS = 60
 PADDLE_SPEED = 10
-BALL_SPEED = 8
+BALL_SPEED = 5
+
 PADDLE_WIDTH, PADDLE_HEIGHT = 156, 18
 BALL_RADIUS = 15
 
@@ -21,7 +22,7 @@ WHITE = (255, 255, 255)
 RED = (255, 50, 50)
 BLUE = (50, 100, 255)
 GREEN = (50, 255, 100)
-YELLOW = (255, 255, 0)  # 修正黄色定义
+YELLOW = (255, 255, 0)
 
 # 全局变量
 screen = None
@@ -203,8 +204,8 @@ def handle_input():
     """处理玩家输入"""
     keys = pygame.key.get_pressed()
     
-    # 顶部paddle控制：A/D键
-    if keys[pygame.K_a]:
+    # 顶部paddle控制：A/D键（忽略大小写）
+    if keys[pygame.K_a] or keys[pygame.K_q]:  # 支持A和Q键（Q是某些键盘布局的A键位置）
         move_paddle(top_paddle, -top_paddle['speed'])
     if keys[pygame.K_d]:
         move_paddle(top_paddle, top_paddle['speed'])
@@ -237,8 +238,9 @@ def draw_ball():
     """绘制球"""
     # 绘制轨迹效果
     for i, (trail_x, trail_y) in enumerate(ball['trail']):
-        alpha = 200
-        radius = 10 + int(ball['radius'] * (i / len(ball['trail'])))
+        
+        alpha = int(255 * (i / len(ball['trail'])))
+        radius = int(ball['radius'] * (i / len(ball['trail'])))
         
         # 创建带透明度的表面
         trail_surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
